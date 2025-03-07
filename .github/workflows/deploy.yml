@@ -1,0 +1,33 @@
+name: Custome Analytics Code Deployment 
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Install dependencies
+      run: pip install wheel setuptools
+
+    #- name:  RDS Deletion Script
+      #run: python rds_create.py 
+
+    - name:  create wheel file 
+      run: python setup.py bdist_wheel
+
+    - name: copy wheel file 
+      run: aws s3 cp dist/customer_analytics-0.1.0-py3-none-any.whl s3://feb2025-training-bucket/code/customer_analytics/
