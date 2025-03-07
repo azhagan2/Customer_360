@@ -23,9 +23,6 @@ jobs:
     - name: Install dependencies
       run: pip install wheel setuptools
 
-    #- name:  RDS Deletion Script
-      #run: python rds_create.py 
-
     - name:  create wheel file 
       run: python setup.py bdist_wheel
 
