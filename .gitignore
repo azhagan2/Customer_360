@@ -1,0 +1,9 @@
+build/
+customer_analytics.egg-info/
+# Virtual environment
+venv/
+.env/
+
+# Distribution / Packaging
+dist/
+*.egg-info/
