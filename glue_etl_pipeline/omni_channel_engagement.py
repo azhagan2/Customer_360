@@ -51,12 +51,12 @@ def run_etl():
         )
 
         engagement_df .show()
-        engagement_df .printSchema()
+        #engagement_df .printSchema()
         engagement_df .createOrReplaceTempView("engagement")
 
         support_df=df_cs.select("*","Issue.Status")
         support_df.createOrReplaceTempView("SupportTickets")
-        support_df.printSchema()
+        #support_df.printSchema()
 
 
         #common tranformation 
