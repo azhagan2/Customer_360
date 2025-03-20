@@ -10,9 +10,9 @@ from pyspark.sql.window import Window
 from glue_etl_pipeline.utils import get_glue_logger,read_from_rds,write_to_s3
 from glue_etl_pipeline.glue_config import USER_MYSQL_URL,ORDER_MYSQL_URL,PRODUCT_MYSQL_URL
 
-
 # Parse job arguments
 args = getResolvedOptions(sys.argv, ["JOB_NAME", "S3_TARGET_PATH"])
+
 
 # Initialize Spark and Glue Context
 sc = SparkContext()
@@ -28,13 +28,19 @@ logger = get_glue_logger()
 def run_etl():
     try:
         print("Staring ETL Job " +args["JOB_NAME"])
+
+        print("starting Puchase Behaviour ETL1")
         customer_df =read_from_rds(spark,USER_MYSQL_URL,"Customers")
         order_df =read_from_rds(spark,ORDER_MYSQL_URL,"Orders")
-        products_df =read_from_rds(spark,PRODUCT_MYSQL_URL,"Products")
 
         #common tranformation 
         top_customers=transform_sql()
+        
+        top_customers.show()
+        print(top_customers.count())
         #top_customers=transform_dataframe(order_df,customer_df)
+
+        
 
         write_to_s3(top_customers,s3_output_path)
 
