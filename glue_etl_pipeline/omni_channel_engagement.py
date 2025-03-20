@@ -56,7 +56,7 @@ def run_etl():
 
         support_df=df_cs.select("*","Issue.Status")
         support_df.createOrReplaceTempView("SupportTickets")
-        #support_df.printSchema()
+        support_df.printSchema()
 
 
         #common tranformation 

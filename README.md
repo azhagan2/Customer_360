@@ -22,3 +22,15 @@ Copy glue script files
 -----------------------
 
 aws s3 cp glue_upload_script s3://feb2025-training-bucket/code/customer_analytics/ --recursive
+
+
+
+Git Commands :
+--------------------
+
+git checkout -b feature-1001   
+
+git add .
+
+git commit -m " desc"
+git push
