@@ -27,9 +27,11 @@ logger = get_glue_logger()
 
 def run_etl():
     try:
-        user_logins_df =read_from_rds(spark,USER_MYSQL_URL,"LoginHistory")
-        order_df =read_from_rds(spark,ORDER_MYSQL_URL,"Orders")
-
+        orders_df = spark.read.table("bronze_db.orders_raw")
+        user_logins_df = spark.read.table("bronze_db.login_history_raw")
+        # Register DataFrames as temporary views for Spark SQL
+        user_logins_df.createOrReplaceTempView("user_logins")
+        orders_df.createOrReplaceTempView("orders")
         #common tranformation 
         high_risk_customers=transform_sql()
         #high_risk_customers=transform_dataframe(order_df,user_logins_df)

@@ -30,13 +30,12 @@ def run_etl():
     
     try:
         
-        df_cs=read_from_dynamodb(glueContext,"CustomerSupport","ap-south-1")
-        df=read_from_dynamodb(glueContext,"EnterpriseCampaigns","ap-south-1")
-       
-        order_df =read_from_rds(spark,ORDER_MYSQL_URL,"Orders")
+        enterprise_campaign_raw = spark.read.table("bronze_db.enterprise_campaign_raw")
+        customer_support_raw = spark.read.table("bronze_db.customer_support_raw")
+        orders_df = spark.read.table("bronze_db.orders_raw")
 
 
-        exploded_df = df.withColumn("Interaction", F.explode(F.col("Interactions")))
+        exploded_df = enterprise_campaign_raw.withColumn("Interaction", F.explode(F.col("Interactions")))
 
         # Select exploded fields
         engagement_df  = exploded_df.select(
@@ -51,10 +50,10 @@ def run_etl():
         )
 
         engagement_df .show()
-        #engagement_df .printSchema()
+        engagement_df .printSchema()
         engagement_df .createOrReplaceTempView("engagement")
 
-        support_df=df_cs.select("*","Issue.Status")
+        support_df=customer_support_raw.select("*","Issue.Status")
         support_df.createOrReplaceTempView("SupportTickets")
         support_df.printSchema()
 

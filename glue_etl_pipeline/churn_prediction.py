@@ -26,7 +26,7 @@ logger = get_glue_logger()
 
 def run_etl():
     try:
-        order_df =read_from_rds(spark,ORDER_MYSQL_URL,"Orders")
+        order_df = spark.read.table("bronze_db.orders_raw")
 
         #common tranformation 
         churn_risk=transform_sql()
@@ -44,28 +44,30 @@ def run_etl():
 
 def transform_sql():
         # Run Spark SQL Query
-        churn_risk = spark.sql(""" WITH customer_activity AS (
-                                        SELECT
-                                            customer_id,
-                                            order_id,
-                                            order_date,
-                                            LAG(order_date) OVER (PARTITION BY customer_id ORDER BY order_date) AS prev_order_date
-                                        FROM Orders
-                                    ),
-                                    churn_risk AS (
-                                        SELECT
-                                            customer_id,
-                                            COUNT(order_id) AS total_orders,
-                                            MAX(order_date) AS last_order_date,
-                                            DATEDIFF(current_date, MAX(order_date)) AS days_since_last_purchase,  
-                                            AVG(DATEDIFF(order_date, prev_order_date)) AS avg_order_gap  
-                                        FROM customer_activity
-                                        GROUP BY customer_id
-                                    )
-                                    SELECT *
-                                    FROM churn_risk
-                                    WHERE days_since_last_purchase > (avg_order_gap * 2)  -- Customers inactive for double their average gap
-                                    ORDER BY days_since_last_purchase DESC;
+        churn_risk = spark.sql(""" 
+                            WITH customer_activity AS (
+                        SELECT
+                            customer_id,
+                            order_id,
+                            order_date,
+                            LAG(order_date) OVER (PARTITION BY customer_id ORDER BY order_date) AS prev_order_date
+                        FROM orders
+                    ),
+                    churn_risk AS (
+                        SELECT
+                            customer_id,
+                            COUNT(order_id) AS total_orders,
+                            MAX(order_date) AS last_order_date,
+                            DATEDIFF(current_date, MAX(order_date)) AS days_since_last_purchase,  
+                            AVG(DATEDIFF(order_date, prev_order_date)) AS avg_order_gap  
+                        FROM customer_activity
+                        GROUP BY customer_id
+                    )
+                    SELECT *
+                    FROM churn_risk
+                    WHERE days_since_last_purchase > (avg_order_gap * 2)  -- Customers inactive for double their average gap
+                    ORDER BY days_since_last_purchase DESC;
+
                                     """)
         return churn_risk
 

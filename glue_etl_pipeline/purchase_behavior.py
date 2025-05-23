@@ -30,9 +30,12 @@ def run_etl():
         print("Staring ETL Job " +args["JOB_NAME"])
 
         print("starting Puchase Behaviour ETL1")
-        customer_df =read_from_rds(spark,USER_MYSQL_URL,"Customers")
-        order_df =read_from_rds(spark,ORDER_MYSQL_URL,"Orders")
 
+        customer_df = spark.read.table("bronze_db.customers_raw")
+        order_df = spark.read.table("bronze_db.orders_raw")
+        customer_df.createOrReplaceTempView("customers")
+        order_df.createOrReplaceTempView("orders")
+        
         #common tranformation 
         top_customers=transform_sql()
         
@@ -55,30 +58,30 @@ def run_etl():
 def transform_sql():
             # Run Spark SQL Query
         top_customers = spark.sql("""
-            WITH customer_spending AS (
-                SELECT
-                    o.customer_id,
-                    SUM(o.total_amount) AS total_spent,
-                    COUNT(o.order_id) AS total_orders,
-                    MAX(o.order_date) AS last_purchase_date
-                FROM Orders o
-                WHERE o.order_date >= date_add(current_date(), -365)  -- Last 1 year
-                GROUP BY o.customer_id
-            ),
-            customer_ranking AS (
-                SELECT
-                    c.country,
-                    c.customer_id,
-                    c.first_name,
-                    c.email,
-                    cs.total_spent,
-                    cs.total_orders,
-                    cs.last_purchase_date,
-                    RANK() OVER (PARTITION BY c.country ORDER BY cs.total_spent DESC) AS spending_rank
-                FROM customer_spending cs
-                JOIN Customers c ON cs.customer_id = c.customer_id
-            )
-            SELECT * FROM customer_ranking WHERE spending_rank <= 10 and country like 'United %';
+             WITH customer_spending AS (
+        SELECT
+            o.customer_id,
+            SUM(o.total_amount) AS total_spent,
+            COUNT(o.order_id) AS total_orders,
+            MAX(o.order_date) AS last_purchase_date
+        FROM orders o
+        WHERE o.order_date >= date_add(current_date(), -365)  -- Last 1 year
+        GROUP BY o.customer_id
+    ),
+    customer_ranking AS (
+        SELECT
+            c.country,
+            c.customer_id,
+            CONCAT(c.first_name, ' ', c.last_name) AS full_name,
+            c.email,
+            cs.total_spent,
+            cs.total_orders,
+            cs.last_purchase_date,
+            RANK() OVER (PARTITION BY c.country ORDER BY cs.total_spent DESC) AS spending_rank
+        FROM customer_spending cs
+        JOIN customers c ON cs.customer_id = c.customer_id
+    )
+    SELECT * FROM customer_ranking WHERE spending_rank <= 10 and country like 'United %';
         """)
         return top_customers
 
