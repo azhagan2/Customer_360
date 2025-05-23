@@ -35,10 +35,12 @@ def run_etl():
         order_df = spark.read.table("bronze_db.orders_raw")
         customer_df.createOrReplaceTempView("customers")
         order_df.createOrReplaceTempView("orders")
+
+        customer_df.show()
         
         #common tranformation 
         top_customers=transform_sql()
-        
+        print("Running  SQL Query  for top customers")
         top_customers.show()
         print(top_customers.count())
         #top_customers=transform_dataframe(order_df,customer_df)
@@ -48,6 +50,7 @@ def run_etl():
         write_to_s3(top_customers,s3_output_path)
 
         print("ETL Job Completed Successfully")
+
     except Exception as e:
         print(f"ETL Job Failed: {str(e)}")
         raise e
