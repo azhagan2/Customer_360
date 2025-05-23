@@ -46,7 +46,6 @@ def run_etl():
         #top_customers=transform_dataframe(order_df,customer_df)
 
         
-
         write_to_s3(top_customers,s3_output_path)
 
         print("ETL Job Completed Successfully")
