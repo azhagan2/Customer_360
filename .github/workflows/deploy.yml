@@ -27,7 +27,6 @@ jobs:
       run: python setup.py bdist_wheel
 
     - name: Get wheel filename
-      id: get_wheel
       run: |
       WHEEL_FILE=$(ls dist/*.whl | head -n 1)
       echo "WHEEL_FILE=$WHEEL_FILE" >> $GITHUB_ENV
