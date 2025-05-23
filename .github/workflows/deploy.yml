@@ -28,8 +28,8 @@ jobs:
 
     - name: Get wheel filename
       run: |
-      WHEEL_FILE=$(ls dist/*.whl | head -n 1)
-      echo "WHEEL_FILE=$WHEEL_FILE" >> $GITHUB_ENV
+        WHEEL_FILE=$(ls dist/*.whl | head -n 1)
+        echo "WHEEL_FILE=$WHEEL_FILE" >> $GITHUB_ENV
 
     - name: copy wheel file 
       run: aws s3 cp dist/"$WHEEL_FILE" s3://may-2025-training-bucket/code/customer_analytics/
