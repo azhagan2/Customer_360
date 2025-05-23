@@ -26,8 +26,14 @@ jobs:
     - name:  create wheel file 
       run: python setup.py bdist_wheel
 
+    - name: Get wheel filename
+      id: get_wheel
+      run: |
+      WHEEL_FILE=$(ls dist/*.whl | head -n 1)
+      echo "WHEEL_FILE=$WHEEL_FILE" >> $GITHUB_ENV
+
     - name: copy wheel file 
-      run: aws s3 cp dist/customer_analytics-0.1.0-py3-none-any.whl s3://may-2025-training-bucket/code/customer_analytics/
+      run: aws s3 cp dist/"$WHEEL_FILE" s3://may-2025-training-bucket/code/customer_analytics/
 
     - name: copy template file 
       run: aws s3 cp glue_upload_script s3://may-2025-training-bucket/code/customer_analytics/ --recursive
