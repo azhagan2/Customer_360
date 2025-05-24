@@ -27,7 +27,7 @@ logger = get_glue_logger()
 def run_etl():
     try:
         order_df = spark.read.table("bronze_db.orders_raw")
-
+        order_df.createOrReplaceTempView("orders")
         #common tranformation 
         churn_risk=transform_sql()
         #churn_risk=transform_dataframe(order_df)

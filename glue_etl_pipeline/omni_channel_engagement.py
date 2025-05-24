@@ -33,7 +33,7 @@ def run_etl():
         enterprise_campaign_raw = spark.read.table("bronze_db.enterprise_campaign_raw")
         customer_support_raw = spark.read.table("bronze_db.customer_support_raw")
         orders_df = spark.read.table("bronze_db.orders_raw")
-
+        orders_df.createOrReplaceTempView("orders")
 
         exploded_df = enterprise_campaign_raw.withColumn("Interaction", F.explode(F.col("Interactions")))
 
