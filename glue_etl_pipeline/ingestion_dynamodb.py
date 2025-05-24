@@ -33,8 +33,8 @@ def run_etl():
         customersupport_df=read_from_dynamodb(glueContext,"CustomerSupport","ap-south-1")
         enterprisecampaigns_df=read_from_dynamodb(glueContext,"EnterpriseCampaigns","ap-south-1")
        
-        write_to_s3(customersupport_df,s3_output_path)
-        write_to_s3(enterprisecampaigns_df,s3_output_path)
+        write_to_s3(customersupport_df,s3_output_path+"/customer_support_raw")
+        write_to_s3(enterprisecampaigns_df,s3_output_path+"/enterprise_campaign_raw")
 
         print("ETL Job Completed Successfully")
     except Exception as e:

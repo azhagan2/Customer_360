@@ -33,11 +33,11 @@ def run_etl():
         user_logins_df =read_from_rds(spark,USER_MYSQL_URL,"LoginHistory")
    
 
-        write_to_s3(customer_df,s3_output_path)
-        write_to_s3(products_df,s3_output_path)
-        write_to_s3(order_df,s3_output_path)
-        write_to_s3(order_items_df,s3_output_path)
-        write_to_s3(user_logins_df,s3_output_path)
+        write_to_s3(customer_df,s3_output_path+"/customers_raw")
+        write_to_s3(products_df,s3_output_path+"/products_raw")
+        write_to_s3(order_df,s3_output_path+"/orders_raw")
+        write_to_s3(order_items_df,s3_output_path+"/order_items_raw")
+        write_to_s3(user_logins_df,s3_output_path+"/login_history_raw")
 
         print("ETL Job Completed Successfully")
     except Exception as e:
