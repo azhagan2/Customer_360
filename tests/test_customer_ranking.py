@@ -1,7 +1,6 @@
 # tests/test_customer_ranking.py
 import pytest
-from transformations.customer_ranking import transform_top_customers_sql
-
+from transformations import transform_top_customers_sql, transform_dataframe    
 from pyspark.sql import SparkSession
 
 
