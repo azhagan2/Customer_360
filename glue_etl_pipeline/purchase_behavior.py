@@ -33,7 +33,6 @@ def run_etl():
         print("S3 Target Path: " + s3_output_path)
         print("  starting transformation")
 
-
         customer_df = spark.read.table("bronze_db.customers_raw")
         order_df = spark.read.table("bronze_db.orders_raw")
         customer_df.createOrReplaceTempView("customers")
