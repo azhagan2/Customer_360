@@ -17,16 +17,23 @@ args = getResolvedOptions(sys.argv, ["JOB_NAME", "S3_TARGET_PATH"])
 # Initialize Spark and Glue Context
 sc = SparkContext()
 glueContext = GlueContext(sc)
-spark = glueContext.spark_session
 job = Job(glueContext)
 job.init(args["JOB_NAME"], args)
 s3_output_path =args['S3_TARGET_PATH'] +args["JOB_NAME"]
 
+
+def get_spark():
+    from pyspark.context import SparkContext
+    from awsglue.context import GlueContext
+    sc = SparkContext.getOrCreate()
+    glueContext = GlueContext(sc)
+    return glueContext.spark_session
 # Initialize Logger
 logger = get_glue_logger()
 
 def run_etl():
     try:
+        spark=get_spark()
         print("Staring ETL Job " +args["JOB_NAME"])
 
         print("starting Puchase Behaviour   ")
