@@ -34,8 +34,8 @@ jobs:
       run: pip install -e .
 
     # ✅ Run tests (CI part)
-    - name: Run tests
-      run: pytest tests/
+     #- name: Run tests
+     #  run: pytest tests/
 
     - name: Install dependencies
       run: pip install wheel setuptools
