@@ -1,6 +1,6 @@
 # tests/test_customer_ranking.py
 import pytest
-from glue_etl_pipeline.transformations.customer_ranking import transform_top_customers_sql
+from transformations.customer_ranking import transform_top_customers_sql
 
 from pyspark.sql import SparkSession
 
