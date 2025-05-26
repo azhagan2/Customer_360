@@ -29,10 +29,10 @@ logger = get_glue_logger()
 
 def run_etl():
     try:
-        customer_df = spark.read.table("bronze_db.customers_raw")
-        order_df = spark.read.table("bronze_db.orders_raw")
-        products_df = spark.read.table("bronze_db.products_raw")
-        order_items_df = spark.read.table("bronze_db.order_items_raw")
+        customer_df = spark.read.table("bronze_db_2.customers_raw")
+        order_df = spark.read.table("bronze_db_2.orders_raw")
+        products_df = spark.read.table("bronze_db_2.products_raw")
+        order_items_df = spark.read.table("bronze_db_2.order_items_raw")
 
         products_df.createOrReplaceTempView("product")
         customer_df.createOrReplaceTempView("customers")
