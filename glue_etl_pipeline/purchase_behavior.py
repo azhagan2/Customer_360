@@ -41,7 +41,7 @@ def run_etl():
         customer_df.show()
         
         #common tranformation 
-        top_customers=transform_top_customers_sql()
+        top_customers=transform_top_customers_sql(spark)
         print("Running  SQL Query  for top customers    --->")
 
 
