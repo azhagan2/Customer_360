@@ -34,7 +34,7 @@ def run_etl():
         print("  starting transformation")
 
 
-        customer_df = spark.read.table("bronze_db.customers_raw")
+        customer_df = spark.read.table("bronze_db.customers_raw_1")
         order_df = spark.read.table("bronze_db.orders_raw")
         customer_df.createOrReplaceTempView("customers")
         order_df.createOrReplaceTempView("orders")
