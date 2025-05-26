@@ -5,7 +5,7 @@ from pyspark.sql import SparkSession
 from awsglue.context import GlueContext
 from awsglue.job import Job
 from awsglue.utils import getResolvedOptions
-from glue_etl_pipeline.transformations.customer_ranking import transform_top_customers_sql, transform_dataframe    
+from transformations.customer_ranking import transform_top_customers_sql, transform_dataframe    
 from glue_etl_pipeline.utils import get_glue_logger,read_from_rds,write_to_s3
 from glue_etl_pipeline.glue_config import USER_MYSQL_URL,ORDER_MYSQL_URL,PRODUCT_MYSQL_URL
 

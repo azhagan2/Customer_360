@@ -1,7 +1,7 @@
 # tests/test_customer_ranking.py
 import pytest
 from pyspark.sql import SparkSession
-from glue_etl_pipeline.transformations.customer_ranking import transform_top_customers_sql
+from transformations.customer_ranking import transform_top_customers_sql
 
 def get_test_spark_session(app_name="unit-tests"):
     return SparkSession.builder \
