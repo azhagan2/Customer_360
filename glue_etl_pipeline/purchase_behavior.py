@@ -5,7 +5,7 @@ from pyspark.sql import SparkSession
 from awsglue.context import GlueContext
 from awsglue.job import Job
 from awsglue.utils import getResolvedOptions
-from transformations import transform_top_customers_sql, transform_dataframe    
+from transformations.customer_ranking import transform_top_customers_sql, transform_dataframe    
 from glue_etl_pipeline.utils import get_glue_logger,read_from_rds,write_to_s3
 from glue_etl_pipeline.glue_config import USER_MYSQL_URL,ORDER_MYSQL_URL,PRODUCT_MYSQL_URL
 
@@ -28,7 +28,7 @@ def run_etl():
     try:
         print("Staring ETL Job " +args["JOB_NAME"])
 
-        print("starting Puchase Behaviour   ")
+        print("starting Puchase Behaviour    --->  ")
         print("S3 Target Path: " + s3_output_path)
         print("  starting transformation")
 
@@ -42,7 +42,7 @@ def run_etl():
         
         #common tranformation 
         top_customers=transform_top_customers_sql()
-        print("Running  SQL Query  for top customers")
+        print("Running  SQL Query  for top customers    --->")
 
 
         top_customers.show()
