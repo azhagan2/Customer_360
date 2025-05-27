@@ -18,7 +18,7 @@ def transform_top_customers_sql(spark):
                    cs.last_purchase_date,
                    RANK() OVER (PARTITION BY c.country ORDER BY cs.total_spent DESC) AS spending_rank
             FROM customer_spending cs
-            JOIN customers_fgf c ON cs.customer_id = c.customer_id
+            JOIN customers c ON cs.customer_id = c.customer_id
         )
         SELECT * FROM customer_ranking
         WHERE spending_rank <= 10 AND country LIKE 'United %'
