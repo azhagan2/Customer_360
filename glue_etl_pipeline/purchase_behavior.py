@@ -10,7 +10,7 @@ from glue_etl_pipeline.utils import get_glue_logger,read_from_rds,write_to_s3
 from glue_etl_pipeline.glue_config import USER_MYSQL_URL,ORDER_MYSQL_URL,PRODUCT_MYSQL_URL
 
 # Parse job arguments
-args = getResolvedOptions(sys.argv, ["JOB_NAME", "S3_TARGET_PATH"])
+args = getResolvedOptions(sys.argv, ['JOB_NAME', 'S3_TARGET_PATH', 'INPUT_DB'])
 
 
 # Initialize Spark and Glue Context
@@ -20,6 +20,7 @@ spark = glueContext.spark_session
 job = Job(glueContext)
 job.init(args["JOB_NAME"], args)
 s3_output_path =args['S3_TARGET_PATH'] +args["JOB_NAME"]
+bronze_db = args['INPUT_DB']
 
 # Initialize Logger
 logger = get_glue_logger()
@@ -33,8 +34,8 @@ def run_etl():
         print("  starting transformation")
 
 
-        customer_df = spark.read.table("bronze_db_2.customers_raw")
-        order_df = spark.read.table("bronze_db_2.orders_raw")
+        customer_df = spark.read.table(f"{bronze_db}.customers_raw")
+        order_df = spark.read.table(f"{bronze_db}.orders_raw")
         customer_df.createOrReplaceTempView("customers")
         order_df.createOrReplaceTempView("orders")
 
