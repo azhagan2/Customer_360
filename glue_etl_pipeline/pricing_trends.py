@@ -9,12 +9,12 @@ from pyspark.sql import functions as F
 from pyspark.sql.functions import col, avg, sum, date_format, year, month,count,when,max
 from pyspark.sql.window import Window
 from pyspark.sql.functions import year,month
-from glue_etl_pipeline.utils import get_glue_logger,read_from_rds,write_to_s3
-from glue_etl_pipeline.glue_config import USER_MYSQL_URL,ORDER_MYSQL_URL,PRODUCT_MYSQL_URL
+from glue_etl_pipeline.utils import get_glue_logger,write_to_s3
 
 
 # Parse job arguments
-args = getResolvedOptions(sys.argv, ["JOB_NAME", "S3_TARGET_PATH"])
+args = getResolvedOptions(sys.argv, ['JOB_NAME', 'S3_TARGET_PATH', 'INPUT_DB'])
+bronze_db = args['INPUT_DB']
 
 # Initialize Spark and Glue Context
 sc = SparkContext()
@@ -29,10 +29,10 @@ logger = get_glue_logger()
 
 def run_etl():
     try:
-        customer_df = spark.read.table("bronze_db_2.customers_raw")
-        order_df = spark.read.table("bronze_db_2.orders_raw")
-        products_df = spark.read.table("bronze_db_2.products_raw")
-        order_items_df = spark.read.table("bronze_db_2.order_items_raw")
+        customer_df = spark.read.table(f"{bronze_db}.customers")
+        order_df = spark.read.table(f"{bronze_db}.orders")
+        products_df = spark.read.table(f"{bronze_db}.products")
+        order_items_df = spark.read.table(f"{bronze_db}.order_items")
 
         products_df.createOrReplaceTempView("product")
         customer_df.createOrReplaceTempView("customers")

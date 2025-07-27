@@ -8,12 +8,11 @@ from awsglue.utils import getResolvedOptions
 from pyspark.sql import functions as F
 from pyspark.sql.functions import col, count, sum, when, coalesce, desc, date_sub, current_date
 from pyspark.sql.window import Window
-from glue_etl_pipeline.utils import get_glue_logger,read_from_rds,write_to_s3,read_from_dynamodb
-from glue_etl_pipeline.glue_config import USER_MYSQL_URL,ORDER_MYSQL_URL,PRODUCT_MYSQL_URL
+from glue_etl_pipeline.utils import get_glue_logger,write_to_s3
 
 
 # Parse job arguments
-args = getResolvedOptions(sys.argv, ["JOB_NAME", "S3_TARGET_PATH"])
+args = getResolvedOptions(sys.argv, ['JOB_NAME', 'S3_TARGET_PATH', 'INPUT_DB'])
 
 # Initialize Spark and Glue Context
 sc = SparkContext()
@@ -22,6 +21,7 @@ spark = glueContext.spark_session
 job = Job(glueContext)
 job.init(args["JOB_NAME"], args)
 s3_output_path =args['S3_TARGET_PATH'] +args["JOB_NAME"]
+bronze_db = args['INPUT_DB']
 
 # Initialize Logger
 logger = get_glue_logger()
@@ -30,9 +30,9 @@ def run_etl():
     
     try:
         
-        enterprise_campaign_raw = spark.read.table("bronze_db_2.enterprise_campaign_raw")
-        customer_support_raw = spark.read.table("bronze_db_2.customer_support_raw")
-        orders_df = spark.read.table("bronze_db_2.orders_raw")
+        enterprise_campaign_raw = spark.read.table(f"{bronze_db}.enterprise_campaign_raw")
+        customer_support_raw = spark.read.table(f"{bronze_db}.customer_support_raw")
+        orders_df = spark.read.table(f"{bronze_db}.orders_raw")
         orders_df.createOrReplaceTempView("orders")
 
         exploded_df = enterprise_campaign_raw.withColumn("Interaction", F.explode(F.col("Interactions")))

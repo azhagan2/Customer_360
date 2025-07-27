@@ -3,7 +3,8 @@ import boto3
 from pyspark.sql import DataFrame
 from pyspark.sql import SparkSession
 from awsglue.context import GlueContext
-from glue_etl_pipeline.glue_config import USER_MYSQL_URL,ORDER_MYSQL_URL,PRODUCT_MYSQL_URL,MYSQL_PROPERTIES
+from datetime import datetime
+from pyspark.sql.functions import col, lit
 
 
 def get_glue_logger():
@@ -14,32 +15,8 @@ def get_glue_logger():
     logger.setLevel(logging.INFO)
     return logger
 
-def read_from_rds(spark: SparkSession, database_url, tablename:str) -> DataFrame:
-    """
-    Reads data from an Database .
-    """
-    df=spark.read.jdbc(url=database_url, table=tablename, properties=MYSQL_PROPERTIES)
-    df.createOrReplaceTempView(tablename)
-    print("Reading from RDS Table -- " +tablename+ "  count -- " + str(df.count()))
-    return df
 
 
-def read_from_dynamodb(glueContext: GlueContext, tableName:str,region) -> DataFrame:
-    """
-    Reads data from an Database .
-    """
-    print("Reading from dynamodb Table --   "+tableName +"   region -- " + region )
-    dyf = glueContext.create_dynamic_frame.from_options(
-        connection_type="dynamodb",
-        connection_options={
-            "dynamodb.input.tableName": tableName,
-            "dynamodb.region": region
-        }
-    )
-    df = dyf.toDF()
-    print("Reading from dynamodb Table -- " +tableName+ "  count -- " + str(df.count()))
-    df.printSchema()
-    return df
 
 def read_from_s3(glue_context: GlueContext, s3_path: str, format="csv", options=None) -> DataFrame:
     """
@@ -57,3 +34,25 @@ def write_to_s3(df: DataFrame, s3_path: str, format="parquet", mode="overwrite")
     print(df.count())
     df.write.mode(mode).format(format).save(s3_path)
     print(f"Write data to S3 Completed: {s3_path}")
+
+
+def validate_data_quality(df, table_name, key_column=None):
+    record_count = df.count()
+    null_count = df.filter(col(key_column).isNull()).count() if key_column else 0
+    if record_count == 0:
+        raise Exception(f"[DQ CHECK] {table_name} has 0 records.")
+    if key_column and null_count > 0:
+        raise Exception(f"[DQ CHECK] {table_name} has {null_count} NULLs in {key_column}.")
+    return record_count
+
+def write_audit_log(spark, job_name, status, customer_count, start_time, end_time):
+    audit_df = spark.createDataFrame([
+        (job_name, status, customer_count, start_time, end_time, datetime.now())
+    ], ["job_name", "status", "record_count", "start_time", "end_time", "log_ts"])
+    audit_df.write.mode("append").format("delta").saveAsTable("enterprise_db.audit_log")
+
+def update_control_table(spark, job_name, status):
+    control_df = spark.createDataFrame([
+        (job_name, status, datetime.now())
+    ], ["job_name", "run_status", "run_ts"])
+    control_df.write.mode("append").format("delta").saveAsTable("enterprise_db.control_table")

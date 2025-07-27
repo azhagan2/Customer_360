@@ -7,8 +7,8 @@ from awsglue.job import Job
 from awsglue.utils import getResolvedOptions
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
-from glue_etl_pipeline.utils import get_glue_logger,read_from_rds,write_to_s3
-from glue_etl_pipeline.glue_config import USER_MYSQL_URL,ORDER_MYSQL_URL,PRODUCT_MYSQL_URL
+from glue_etl_pipeline.utils import get_glue_logger,write_to_s3,write_audit_log,update_control_table
+from datetime import datetime
 
 # Parse job arguments
 args = getResolvedOptions(sys.argv, ['JOB_NAME', 'S3_TARGET_PATH', 'INPUT_DB'])
@@ -27,7 +27,8 @@ logger = get_glue_logger()
 
 def run_etl():
     try:
-        order_df = spark.read.table(f"{bronze_db}.orders_raw")
+        start_time = datetime.now()
+        order_df = spark.read.table(f"{bronze_db}.orders")
         order_df.createOrReplaceTempView("orders")
         
         #common tranformation 
@@ -36,9 +37,15 @@ def run_etl():
 
         write_to_s3(churn_risk,s3_output_path)
 
+        end_time = datetime.now()
+        write_audit_log(spark, args['JOB_NAME'], "SUCCESS", churn_risk, start_time, end_time)
+        update_control_table(spark, args['JOB_NAME'], "SUCCESS")
+
         print("ETL Job Completed Successfully")
     except Exception as e:
         print(f"ETL Job Failed: {str(e)}")
+        write_audit_log(spark, args['JOB_NAME'], "FAILURE", 0, start_time, end_time)
+        update_control_table(spark, args['JOB_NAME'], "FAILURE")
         raise e
     job.commit()
 
