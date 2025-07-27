@@ -38,7 +38,7 @@ def run_etl():
         write_to_s3(churn_risk,s3_output_path)
 
         end_time = datetime.now()
-        write_audit_log(spark, args['JOB_NAME'], "SUCCESS", churn_risk, start_time, end_time)
+        write_audit_log(spark, args['JOB_NAME'], "SUCCESS", churn_risk.count(), start_time, end_time)
         update_control_table(spark, args['JOB_NAME'], "SUCCESS")
 
         print("ETL Job Completed Successfully")

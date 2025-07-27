@@ -26,8 +26,8 @@ logger = get_glue_logger()
 
 def run_etl():
     try:
-        orders_df = spark.read.table(f"{bronze_db}.orders_raw")
-        user_logins_df = spark.read.table(f"{bronze_db}.login_history_raw")
+        orders_df = spark.read.table(f"{bronze_db}.orders")
+        user_logins_df = spark.read.table(f"{bronze_db}.login_history")
         # Register DataFrames as temporary views for Spark SQL
         user_logins_df.createOrReplaceTempView("LoginHistory")
         orders_df.createOrReplaceTempView("orders")
