@@ -13,6 +13,8 @@ from datetime import datetime
 # Parse job arguments
 args = getResolvedOptions(sys.argv, ['JOB_NAME', 'S3_TARGET_PATH', 'INPUT_DB'])
 
+
+
 # Initialize Spark and Glue Context
 sc = SparkContext()
 glueContext = GlueContext(sc)

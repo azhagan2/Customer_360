@@ -12,6 +12,8 @@ from glue_etl_pipeline.utils import get_glue_logger,write_to_s3
 args = getResolvedOptions(sys.argv, ['JOB_NAME', 'S3_TARGET_PATH', 'INPUT_DB'])
 
 
+
+
 # Initialize Spark and Glue Context
 sc = SparkContext()
 glueContext = GlueContext(sc)
@@ -31,10 +33,6 @@ def run_etl():
         start_time = datetime.now()
         print("Staring ETL Job " +args["JOB_NAME"])
 
-        print("starting Puchase Behaviour    --->  ")
-        print("S3 Target Path: " + s3_output_path)
-        print("  starting transformation")
-
 
         customer_df = spark.read.table(f"{bronze_db}.customers")
         order_df = spark.read.table(f"{bronze_db}.orders")
@@ -45,11 +43,7 @@ def run_etl():
         
         #common tranformation 
         top_customers=transform_top_customers_sql(spark)
-        print("Running  SQL Query  for top customers    --->")
-
-
-        top_customers.show()
-        print(top_customers.count())
+ 
         #top_customers=transform_dataframe(order_df,customer_df)
 
         
