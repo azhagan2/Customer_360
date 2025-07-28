@@ -5,7 +5,7 @@ from pyspark.sql.window import Window
 def transform_top_customers_sql(spark):
     return spark.sql("""
         WITH customer_spending AS (
-            SELECT customer_id, SUM(total_amount) AS total_spent,
+            SELECT id, SUM(total_amount) AS total_spent,
                    COUNT(order_id) AS total_orders, MAX(order_date) AS last_purchase_date
             FROM orders
             WHERE order_date >= date_add(current_date(), -365)
