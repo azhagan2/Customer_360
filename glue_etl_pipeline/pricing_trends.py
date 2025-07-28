@@ -71,7 +71,7 @@ def transform_sql(customer_df,order_df,products_df,order_items_df):
     sales_data = sales_data.withColumn("order_year", year(col("order_date"))) .withColumn("order_month", month(col("order_date"))) 
 
     sales_data.printSchema()
-    historical_customer_sales_df=spark.read.parquet("s3://may-2025-training-bucket/RetailCustomer360/historical_sales_data/").repartition(4)
+    historical_customer_sales_df=spark.read.parquet("s3://customer-analytics-july2025/bronze/historical_sales_data/").repartition(4)
     historical_customer_sales_df.printSchema()
     historical_customer_sales_df.count()
 
