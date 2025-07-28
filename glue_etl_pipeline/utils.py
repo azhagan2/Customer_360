@@ -50,10 +50,3 @@ def write_audit_log(spark, job_name, status, customer_count, start_time, end_tim
         (job_name, status, customer_count, start_time, end_time, datetime.now())
     ], ["job_name", "status", "record_count", "start_time", "end_time", "log_ts"])
     audit_df.write.mode("append").insertInto("enterprise_db.audit_log")
-
-def update_control_table(spark, job_name, status):
-    control_df = spark.createDataFrame([
-        (job_name, status, datetime.now())
-    ], ["job_name", "run_status", "run_ts"])
-    #control_df.write.mode("append").format("delta").saveAsTable("enterprise_db.control_table")
-    control_df.write.mode("append").insertInto("enterprise_db.control_table")

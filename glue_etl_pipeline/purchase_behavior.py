@@ -52,13 +52,11 @@ def run_etl():
         print("ETL Job Completed Successfully")
         end_time = datetime.now()
         write_audit_log(spark, args['JOB_NAME'], "SUCCESS", top_customers.count(), start_time, end_time)
-        update_control_table(spark, args['JOB_NAME'], "SUCCESS")
 
     except Exception as e:
         end_time = datetime.now()
         print(f"ETL Job Failed: {str(e)}")
         write_audit_log(spark, args['JOB_NAME'], "FAILURE", 0, start_time, end_time)
-        update_control_table(spark, args['JOB_NAME'], "FAILURE")
         raise e
     job.commit()
 
