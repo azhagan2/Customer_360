@@ -7,7 +7,7 @@ from awsglue.job import Job
 from awsglue.utils import getResolvedOptions
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
-from glue_etl_pipeline.utils import get_glue_logger,write_to_s3,write_audit_log,update_control_table
+from glue_etl_pipeline.utils import get_glue_logger,write_to_s3,write_audit_log
 from datetime import datetime
 
 # Parse job arguments

@@ -22,7 +22,7 @@ job = Job(glueContext)
 job.init(args["JOB_NAME"], args)
 s3_output_path =args['S3_TARGET_PATH'] +args["JOB_NAME"]
 bronze_db = args['INPUT_DB']
-from glue_etl_pipeline.utils import get_glue_logger,write_to_s3,write_audit_log,update_control_table
+from glue_etl_pipeline.utils import get_glue_logger,write_to_s3,write_audit_log
 from datetime import datetime
 
 # Initialize Logger
