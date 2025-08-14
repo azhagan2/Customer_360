@@ -32,6 +32,7 @@ def run_etl():
         start_time = datetime.now()
         print("Staring ETL Job " +args["JOB_NAME"])
 
+        print(f"{bronze_db}.customers")
 
         customer_df = spark.read.table(f"{bronze_db}.customers")
         order_df = spark.read.table(f"{bronze_db}.orders")

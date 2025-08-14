@@ -4,7 +4,6 @@ from pyspark.sql.window import Window
 
 def transform_top_customers_sql(spark):
     return spark.sql("""
-                     
                 WITH customer_spending AS (
                     SELECT
                         o.customer_id,
