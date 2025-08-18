@@ -45,8 +45,11 @@ def validate_data_quality(df, table_name, key_column=None):
         raise Exception(f"[DQ CHECK] {table_name} has {null_count} NULLs in {key_column}.")
     return record_count
 
-def write_audit_log(spark, job_name, status, customer_count, start_time, end_time):
+def write_audit_log(spark, job_name,s3_output_path, status, customer_count, start_time, end_time):
     audit_df = spark.createDataFrame([
         (job_name, status, customer_count, start_time, end_time, datetime.now())
     ], ["job_name", "status", "record_count", "start_time", "end_time", "log_ts"])
-    audit_df.write.mode("append").insertInto("enterprise_db.audit_log")
+    #audit_df.write.mode("append").insertInto("enterprise_db.audit_log")
+    audit_df.write \
+    .mode("append") \
+    .parquet(f"{s3_output_path}/audit_log")

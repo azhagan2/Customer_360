@@ -45,13 +45,14 @@ def run_etl():
         write_to_s3(churn_risk, s3_output_path)
 
         end_time = datetime.now()
-        write_audit_log(spark, args['JOB_NAME'], "SUCCESS", churn_risk.count(), start_time, end_time)
+        write_audit_log(spark, args['JOB_NAME'],s3_output_path, "SUCCESS", churn_risk.count(), start_time, end_time)
         print("ETL Job Completed Successfully")
 
     except Exception as e:
         end_time = datetime.now()
         print(f"ETL Job Failed: {str(e)}")
-        write_audit_log(spark, args['JOB_NAME'], "FAILURE", 0, start_time, end_time)
+        write_audit_log(spark, args['JOB_NAME'],s3_output_path, "FAILURE", 0, start_time, end_time)
+        
         raise e
     finally:
         job.commit()
