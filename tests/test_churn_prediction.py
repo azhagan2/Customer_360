@@ -1,6 +1,8 @@
 import pytest
 from pyspark.sql import SparkSession
 from glue_etl_pipeline.churn_prediction import transform_sql
+from glue_etl_pipeline.churn_prediction import transform_dataframe
+import pyspark.sql.functions as F
 
 def get_test_spark_session(app_name="unit-tests"):
     return SparkSession.builder \
@@ -45,3 +47,22 @@ def test_transform_sql_churn_prediction(spark):
     # Verify churn condition logic: days_since_last_purchase > avg_order_gap * 2
     for row in result:
         assert row.days_since_last_purchase > (row.avg_order_gap * 2)
+
+
+
+def test_transform_dataframe_churn_prediction(spark):
+    orders_data = [
+        ("cust1", "ord1", "2024-01-01"),
+        ("cust1", "ord2", "2024-02-01"),
+        ("cust1", "ord3", "2024-03-01"),
+        ("cust2", "ord4", "2024-01-01"),
+    ]
+
+    orders_df = spark.createDataFrame(
+        orders_data, ["customer_id", "order_id", "order_date"]
+    ).withColumn("order_date", F.col("order_date").cast("date"))
+
+    result_df = transform_dataframe(orders_df)
+
+    assert "customer_id" in result_df.columns
+    assert result_df.count() >= 1
