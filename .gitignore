@@ -6,3 +6,4 @@ venv/
 
 # Distribution / Packaging
 *.egg-info/
+.pytest_cache/
