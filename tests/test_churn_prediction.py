@@ -1,6 +1,6 @@
 import pytest
 from pyspark.sql import SparkSession
-from churn_prediction import transform_sql
+from glue_etl_pipeline.churn_prediction import transform_sql
 
 def get_test_spark_session(app_name="unit-tests"):
     return SparkSession.builder \
