@@ -31,7 +31,7 @@ def test_transform_sql_churn_prediction(spark):
     orders_df.createOrReplaceTempView("orders")
 
     # Call churn prediction transformation
-    result_df = transform_sql()
+    result_df = transform_sql(spark)
 
     # Collect results
     result = result_df.select("customer_id", "days_since_last_purchase", "avg_order_gap").collect()
