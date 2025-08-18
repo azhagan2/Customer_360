@@ -27,20 +27,32 @@ jobs:
         python-version: '3.10'
 
     # ✅ Install dependencies
-    - name: Install dependencies\
-      run: pip install -r requirements.txt
-    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install pytest pytest-cov wheel setuptools
+
     - name: Install package
       run: pip install -e .
 
-    # ✅ Run tests (CI part)
-    - name: Run tests
-      run: pytest tests/
+    # ✅ Run tests (with coverage + HTML report)
+    - name: Run tests with coverage
+      run: |
+        pytest -v -s \
+          --cov=glue_etl_pipeline \
+          --cov-report=term-missing \
+          --cov-report=html \
+          tests/
 
-    - name: Install dependencies
-      run: pip install wheel setuptools
+    # ✅ Upload HTML coverage report
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: html-coverage-report
+        path: htmlcov
 
-    - name:  create wheel file 
+    # ✅ Build wheel package
+    - name: Create wheel file
       run: python setup.py bdist_wheel
 
     - name: Get wheel filename
@@ -48,8 +60,9 @@ jobs:
         WHEEL_FILE=$(ls dist/*.whl | head -n 1)
         echo "WHEEL_FILE=$WHEEL_FILE" >> $GITHUB_ENV
 
-    - name: copy wheel file 
-      run: aws s3 cp "$WHEEL_FILE" s3://customer-analytics-july2025/code/customer_analytics/ 
+    # ✅ Copy artifacts to S3
+    - name: Copy wheel file 
+      run: aws s3 cp "$WHEEL_FILE" s3://customer-analytics-july2025/code/customer_analytics/
 
-    - name: copy template file 
+    - name: Copy template file 
       run: aws s3 cp glue_upload_script s3://customer-analytics-july2025/code/customer_analytics/ --recursive
