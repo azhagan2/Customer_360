@@ -1,7 +1,7 @@
 import pytest
 from pyspark.sql import SparkSession
 from datetime import date, timedelta
-from etl_script_filename import transform_sql, transform_dataframe   # replace with your actual filename
+from glue_etl_pipeline.fraud_detection import transform_sql, transform_dataframe
 
 def get_test_spark_session(app_name="unit-tests"):
     return SparkSession.builder \
