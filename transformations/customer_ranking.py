@@ -7,6 +7,7 @@ def transform_top_customers_sql(spark):
                 WITH customer_spending AS (
                     SELECT
                         o.customer_id,
+                        o.total_amount,
                         SUM(o.total_amount) AS total_spent,
                         COUNT(o.order_id) AS total_orders,
                         MAX(o.order_date) AS last_purchase_date
