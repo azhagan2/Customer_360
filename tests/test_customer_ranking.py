@@ -19,11 +19,11 @@ def test_transform_top_customers_df(spark):
     orders_data = [
         ("cust1", "2024-06-01", 100.0, "ord1"),
         ("cust11", "2025-03-01", 150.0, "ord2"),
-        ("cust2", "2025-01-01", 200.0, "ord3")
+        ("cust211122", "2025-01-01", 2040.0, "ord31")
     ]
     customers_data = [
-        ("cust1", "John", "Doe", "john@example.com", "United States"),
-        ("cust2343", "Jane", "Smith", "jane@example.com", "United Kingdom")
+        ("cust1", "John", "Doe", "john11@example.com", "United States"),
+        ("cust2343", "Jane", "Smith", "jane222@example.com", "United Kingdom")
     ]
 
     orders_df = spark.createDataFrame(orders_data, ["customer_id", "order_date", "total_amount", "order_id"])
