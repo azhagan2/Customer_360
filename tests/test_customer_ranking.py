@@ -23,13 +23,16 @@ def test_transform_top_customers_df(spark):
     ]
     customers_data = [
         ("cust1", "John", "Doe", "john@example.com", "United States"),
-        ("cust2", "Jane", "Smith", "jane@example.com", "United States")
+        ("cust23434", "Jane", "Smith", "jane@example.com", "United States")
     ]
 
     orders_df = spark.createDataFrame(orders_data, ["customer_id", "order_date", "total_amount", "order_id"])
     customers_df = spark.createDataFrame(customers_data, ["customer_id", "first_name", "last_name", "email", "country"])
     customers_df.createOrReplaceTempView("customers")
     orders_df.createOrReplaceTempView("orders")
+    
+    
+    
     result_df = transform_top_customers_sql(spark)
     result_df.show()
     result = result_df.select("customer_id", "spending_rank").collect()
