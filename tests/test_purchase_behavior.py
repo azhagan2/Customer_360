@@ -16,7 +16,7 @@ def spark():
     return get_test_spark_session()
 
 
-def test_transform_top_customers_df(spark):
+def test_transform_top_customers_sql(spark):
     orders_data = [
         ("cust1", "2024-06-01", 100.0, "ord1"),
         ("cust11", "2025-03-01", 150.0, "ord2"),
