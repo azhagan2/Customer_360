@@ -52,22 +52,22 @@ jobs:
         path: htmlcov
 
 
-    # ✅ Build wheel package
+    #✅ Build wheel package
 
-    # - name: Clean old wheel files
-    #   run: rm -rf dist/ build/ *.egg-info
+    - name: Clean old wheel files
+      run: rm -rf dist/ build/ *.egg-info
       
-    # - name: Create wheel file
-    #   run: python setup.py bdist_wheel
+    - name: Create wheel file
+      run: python setup.py bdist_wheel
 
-    # - name: Get wheel filename
-    #   run: |
-    #     WHEEL_FILE=$(ls dist/*.whl | head -n 1)
-    #     echo "WHEEL_FILE=$WHEEL_FILE" >> $GITHUB_ENV
+    - name: Get wheel filename
+      run: |
+        WHEEL_FILE=$(ls dist/*.whl | head -n 1)
+        echo "WHEEL_FILE=$WHEEL_FILE" >> $GITHUB_ENV
 
-    # # ✅ Copy artifacts to S3
-    # - name: Copy wheel file 
-    #   run: aws s3 cp "$WHEEL_FILE" s3://customer-analytics-oct2025/code/customer_analytics/
+    # ✅ Copy artifacts to S3
+    - name: Copy wheel file 
+      run: aws s3 cp "$WHEEL_FILE" s3://customer-analytics-oct2025/code/customer_analytics/
 
-    # - name: Copy template file 
-    #   run: aws s3 cp glue_upload_script s3://customer-analytics-oct2025/code/customer_analytics/ --recursive
+    - name: Copy template file 
+      run: aws s3 cp glue_upload_script s3://customer-analytics-oct2025/code/customer_analytics/ --recursive
