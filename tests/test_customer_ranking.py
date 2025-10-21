@@ -23,7 +23,7 @@ def test_transform_top_customers_df(spark):
     ]
     customers_data = [
         ("cust1", "John", "Doe", "john@example.com", "United States"),
-        ("cust23434", "Jane", "Smith", "jane@example.com", "United Kingdom")
+        ("cust2343", "Jane", "Smith", "jane@example.com", "United Kingdom")
     ]
 
     orders_df = spark.createDataFrame(orders_data, ["customer_id", "order_date", "total_amount", "order_id"])
