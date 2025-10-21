@@ -32,11 +32,10 @@ def test_transform_top_customers_sql(spark):
     customers_df.createOrReplaceTempView("customers")
     orders_df.createOrReplaceTempView("orders")
     
-    
-    
     result_df = transform_top_customers_sql(spark)
     result = result_df.select("customer_id", "spending_rank").collect()
-
+    print(result)
+    print("test_transform_top_customers_sql completed")
     assert len(result) == 2
     assert all(row.spending_rank <= 10 for row in result)
 
