@@ -7,7 +7,6 @@ venv/
 # Distribution / Packaging
 *.egg-info/
 .pytest_cache/
-tests/
 glue_etl_pipeline/__pycache__/
 tests/__pycache__/
 dist/
