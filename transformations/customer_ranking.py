@@ -2,13 +2,11 @@ from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 
 
-
 def transform_top_customers_sql(spark):
     return spark.sql("""
                 WITH customer_spending AS (
                     SELECT
                         o.customer_id,
-                        o.total_amount,
                         SUM(o.total_amount) AS total_spent,
                         COUNT(o.order_id) AS total_orders,
                         MAX(o.order_date) AS last_purchase_date
@@ -19,7 +17,7 @@ def transform_top_customers_sql(spark):
                 customer_ranking AS (
                     SELECT
                         c.country,
-                        c.cust_id,
+                        c.customer_id,
                         CONCAT(c.first_name, ' ', c.last_name) AS full_name,
                         c.email,
                         cs.total_spent,
