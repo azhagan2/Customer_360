@@ -31,6 +31,7 @@ def test_transform_top_customers_df(spark):
     customers_df.createOrReplaceTempView("customers")
     orders_df.createOrReplaceTempView("orders")
     result_df = transform_top_customers_sql(spark)
+    result_df.show()
     result = result_df.select("customer_id", "spending_rank").collect()
 
     assert len(result) == 2

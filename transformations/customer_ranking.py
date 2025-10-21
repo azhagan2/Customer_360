@@ -18,6 +18,12 @@ def transform_top_customers_sql(spark):
                 ),
                 customer_ranking AS (
                     SELECT
+                        c.country,
+                        c.cust_id,
+                        CONCAT(c.first_name, ' ', c.last_name) AS full_name,
+                        c.email,
+                        cs.total_spent,
+                        cs.total_orders,
                         cs.last_purchase_date,
                         RANK() OVER (PARTITION BY c.country ORDER BY cs.total_spent DESC) AS spending_rank
                     FROM customer_spending cs
