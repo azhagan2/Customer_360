@@ -24,7 +24,7 @@ def test_transform_top_customers_sql(spark):
     ]
     customers_data = [
         ("cust1", "John", "Doe", "john11@example.com", "United States"),
-        ("cust2343", "Jane", "Smith", "jane222@example.com", "United Kingdom")
+        ("cust211122", "Jane", "Smith", "jane222@example.com", "United States")
     ]
 
     orders_df = spark.createDataFrame(orders_data, ["customer_id", "order_date", "total_amount", "order_id"])
@@ -59,5 +59,5 @@ def test_transform_top_customers_df(spark):
     result_df = transform_dataframe(orders_df,customers_df)
     result = result_df.select("customer_id", "spending_rank").collect()
 
-    #assert len(result) == 2
-    #ssert all(row.spending_rank <= 10 for row in result)
+    assert len(result) == 2
+    assert all(row.spending_rank <= 10 for row in result)
