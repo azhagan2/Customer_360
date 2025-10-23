@@ -61,7 +61,7 @@ def run_etl():
         enterprisecampaigns_df = spark.read.table(f"{bronze_db}.enterprisecampaigns")
         historical_customer_sales_df = spark.read.table(f"{bronze_db}.historical_customer_sales")
         
-        write_to_s3_create_table(product_df,args['S3_TARGET_PATH'] +args["JOB_NAME"]+'/product_clean',output_db,'product')
+        write_to_s3_create_table(product_df,args['S3_TARGET_PATH'] +args["JOB_NAME"]+'/product_clean',output_db,'products')
 
         write_to_s3_create_table(loginhistory_df,args['S3_TARGET_PATH'] +args["JOB_NAME"]+'/loginhistory_clean',output_db,'loginhistory')
         
