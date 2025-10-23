@@ -44,11 +44,7 @@ def write_to_s3_create_table(df: DataFrame,s3_path: str,output_db: str, tableNam
     df.show(10)
     print(df.count())
     df.write.mode(mode).format(format).save(s3_path)
-    df.write \
-    .format(format) \
-    .mode(mode) \
-    .option("path", s3_path) \
-    .saveAsTable(f"{output_db}.{tableName}")
+    df.write.format(format) .mode(mode) .option("path", s3_path).saveAsTable(f"{output_db}.{tableName}")
     print(f"Write data to S3 Completed: {s3_path}")
 
 def validate_data_quality(df, table_name, key_column=None):

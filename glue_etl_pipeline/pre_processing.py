@@ -124,7 +124,6 @@ def clean_order_data(spark):
     WHERE o.order_id IS NOT NULL
     AND o.customer_id IS NOT NULL
     AND o.total_amount > 0
-    AND o.order_date >= c.created_at
     AND o.order_date <= current_date()
     """
     orders_clean_df = spark.sql(orders_clean_sql)
