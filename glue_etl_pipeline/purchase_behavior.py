@@ -30,7 +30,7 @@ logger = get_glue_logger()
 def run_etl():
     try:
         start_time = datetime.now()
-        print("Staring ETL Job " +args["JOB_NAME"])
+        print("Staring ETL Job      ---   " +args["JOB_NAME"])
 
         print(f"{bronze_db}.customers")
 
