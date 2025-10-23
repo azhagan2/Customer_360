@@ -50,9 +50,11 @@ def run_etl():
         orders_clean_df=clean_order_data(spark)
         write_to_s3_create_table(orders_clean_df,args['S3_TARGET_PATH'] +args["JOB_NAME"]+'/orders_clean',output_db,'orders')
         
-        #top_customers=transform_dataframe(order_df,customer_df)
 
+
+        #top_customers=transform_dataframe(order_df,customer_df)
         product_df = spark.read.table(f"{bronze_db}.products")
+        order_items_df = spark.read.table(f"{bronze_db}.order_items")
         loginhistory_df = spark.read.table(f"{bronze_db}.loginhistory")
         usage_history_df = spark.read.table(f"{bronze_db}.usage_history")
 
@@ -60,6 +62,8 @@ def run_etl():
 
         enterprisecampaigns_df = spark.read.table(f"{bronze_db}.enterprisecampaigns")
         historical_customer_sales_df = spark.read.table(f"{bronze_db}.historical_customer_sales")
+
+        write_to_s3_create_table(order_items_df,args['S3_TARGET_PATH'] +args["JOB_NAME"]+'/order_items_clean',output_db,'order_items')
         
         write_to_s3_create_table(product_df,args['S3_TARGET_PATH'] +args["JOB_NAME"]+'/product_clean',output_db,'products')
 
