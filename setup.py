@@ -2,14 +2,14 @@ from setuptools import setup, find_packages
 
 setup(
     name="customer_analytics",  # Replace with your package name
-    version="0.1.0",
+    version="2.2.0",
     packages=find_packages(),
     install_requires=[
         "boto3",
         "pyspark",
         "awswrangler"  # Useful for AWS data handling
     ],
-    author="Velmurugan",
+    author="Azhagan",
     author_email="your.email@example.com",
     description="AWS Glue ETL pipeline for data processing",
     long_description=open("README.md").read(),

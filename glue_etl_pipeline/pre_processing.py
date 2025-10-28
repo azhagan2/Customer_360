@@ -102,8 +102,7 @@ def clean_customer_data(spark):
         city,
         state,
         CAST(zip_code AS STRING) AS zip_code,
-        country,
-        created_at
+        country
     FROM customer_raw
     WHERE customer_id IS NOT NULL
     AND email RLIKE '^[^@]+@[^@]+\\.[^@]+$'
