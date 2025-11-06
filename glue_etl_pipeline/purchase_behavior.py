@@ -49,7 +49,7 @@ def run_etl():
         
         write_to_s3(top_customers,s3_output_path)
 
-        print("ETL Job Completed Successfully")
+        print("ETL Job Completed Successfully let's check (writing for push)")
         end_time = datetime.now()
         write_audit_log(spark, args['JOB_NAME'],args['S3_TARGET_PATH'], "SUCCESS", top_customers.count(), start_time, end_time)
 
