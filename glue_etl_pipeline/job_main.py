@@ -37,7 +37,7 @@ def run_etl():
         logger.info(f"Writing transformed data to {args['S3_TARGET_PATH']}")
         df_transformed.write.mode("overwrite").parquet(args["S3_TARGET_PATH"])
 
-        logger.info("ETL Job Completed Successfully")
+        logger.info("ETL Job Completed Successfully testing now")
 
         job.commit()
     except Exception as e:
