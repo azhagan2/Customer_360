@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="customer_analytics",  # Replace with your package name
-    version="2.2.0",
+    version="2.2.1",
     packages=find_packages(),
     install_requires=[
         "boto3",

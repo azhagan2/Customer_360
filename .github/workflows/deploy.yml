@@ -62,8 +62,9 @@ jobs:
 
     - name: Get wheel filename
       run: |
-        WHEEL_FILE=$(ls dist/*.whl | head -n 1)
+        WHEEL_FILE=$(ls -t dist/*.whl | head -n 1)
         echo "WHEEL_FILE=$WHEEL_FILE" >> $GITHUB_ENV
+
 
     # ✅ Copy artifacts to S3
     - name: Copy wheel file 
